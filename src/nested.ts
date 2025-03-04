@@ -1,6 +1,6 @@
 import { Answer } from "./interfaces/answer";
 import { Question, QuestionType } from "./interfaces/question";
-import { makeBlankQuestion } from "./objects";
+import { duplicateQuestion, makeBlankQuestion } from "./objects";
 
 /**
  * Consumes an array of questions and returns a new array with only the questions
@@ -167,7 +167,18 @@ export function changeQuestionTypeById(
     targetId: number,
     newQuestionType: QuestionType,
 ): Question[] {
-    return [];
+    return [...questions].map((question) =>
+        question.id === targetId ?
+            {
+                ...question,
+                type: newQuestionType,
+                options:
+                    newQuestionType !== "multiple_choice_question" ?
+                        []
+                    :   question.options,
+            }
+        :   question,
+    );
 }
 
 /**
@@ -186,7 +197,19 @@ export function editOption(
     targetOptionIndex: number,
     newOption: string,
 ): Question[] {
-    return [];
+    return [...questions].map((question) =>
+        question.id === targetId ?
+            {
+                ...question,
+                options:
+                    targetOptionIndex === -1 ?
+                        [...question.options, newOption]
+                    :   question.options.map((option, index) =>
+                            index === targetOptionIndex ? newOption : option,
+                        ),
+            }
+        :   question,
+    );
 }
 
 /***
@@ -200,5 +223,15 @@ export function duplicateQuestionInArray(
     targetId: number,
     newId: number,
 ): Question[] {
-    return [];
+    return questions.flatMap((question) =>
+        question.id === targetId ?
+            [question, duplicateQuestion(newId, question)]
+        :   question,
+    );
+
+    /**
+     * I used the flatMap() method to ensure the duplicated question would be inserted directly after the original question instead of being in a nested array.
+     * This made the duplicated question a "top-level" property in the questions array.
+     * Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap
+     */
 }
