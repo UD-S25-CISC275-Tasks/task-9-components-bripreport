@@ -8,7 +8,7 @@ import { Question, QuestionType } from "./interfaces/question";
 export function makeBlankQuestion(
     id: number,
     name: string,
-    type: QuestionType
+    type: QuestionType,
 ): Question {
     return {
         id,
@@ -18,7 +18,7 @@ export function makeBlankQuestion(
         expected: "",
         options: [],
         points: 1,
-        published: false
+        published: false,
     };
 }
 
@@ -42,9 +42,9 @@ export function isCorrect(question: Question, answer: string): boolean {
  * be exactly one of the options.
  */
 export function isValid(question: Question, answer: string): boolean {
-    return question.type === "short_answer_question"
-        ? true
-        : question.options.includes(answer);
+    return question.type === "short_answer_question" ?
+            true
+        :   question.options.includes(answer);
 }
 
 /**
@@ -77,9 +77,9 @@ export function toShortForm(question: Question): string {
 export function toMarkdown(question: Question): string {
     return (
         `# ${question.name}\n${question.body}` +
-        (question.type === "multiple_choice_question"
-            ? "\n" + question.options.map((option) => `- ${option}`).join("\n")
-            : "")
+        (question.type === "multiple_choice_question" ?
+            "\n" + question.options.map((option) => `- ${option}`).join("\n")
+        :   "")
     );
 }
 
@@ -88,9 +88,9 @@ export function toMarkdown(question: Question): string {
  * `newName`.
  */
 export function renameQuestion(question: Question, newName: string): Question {
-    return question.name === newName
-        ? question
-        : { ...question, name: newName };
+    return question.name === newName ?
+            question
+        :   { ...question, name: newName };
 }
 /**
  * Return a new version of the given question, except the `published` field
@@ -116,7 +116,7 @@ export function duplicateQuestion(id: number, oldQuestion: Question): Question {
         options: oldQuestion.options,
         expected: oldQuestion.expected,
         points: oldQuestion.points,
-        published: false
+        published: false,
     };
 }
 
@@ -128,9 +128,9 @@ export function duplicateQuestion(id: number, oldQuestion: Question): Question {
  * Check out the subsection about "Nested Fields" for more information.
  */
 export function addOption(question: Question, newOption: string): Question {
-    return question.options.includes(newOption)
-        ? question
-        : { ...question, options: [...question.options, newOption] };
+    return question.options.includes(newOption) ?
+            question
+        :   { ...question, options: [...question.options, newOption] };
 }
 
 /**
@@ -145,7 +145,7 @@ export function mergeQuestion(
     id: number,
     name: string,
     contentQuestion: Question,
-    { points }: { points: number }
+    { points }: { points: number },
 ): Question {
     return {
         id,
@@ -155,6 +155,6 @@ export function mergeQuestion(
         options: contentQuestion.options,
         expected: contentQuestion.expected,
         points,
-        published: false
+        published: false,
     };
 }
